@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oh My Dog 🌭 — Corrientes</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --y: #FFD600;
+  --r: #FF2B2B;
+  --k: #0A0A0A;
+  --g: #141414;
+  --g2: #1E1E1E;
+  --w: #F0EBE0;
+  --green: #00FF87;
+  --muted: #5a5a5a;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--k);
+  color: var(--w);
+  font-family: 'Barlow Condensed', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor {
+  width: 18px; height: 18px;
+  background: var(--y);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: difference;
+}
+.cursor.big { width: 48px; height: 48px; }
+
+/* NOISE OVERLAY */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ─── NAVBAR ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 3rem;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid #1f1f1f;
+  animation: fadeDown 0.6s ease both;
+}
+@keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:none; } }
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 3px;
+  color: var(--y);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--r); }
+
+.nav-links {
+  display: flex; gap: 2.5rem; list-style: none;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #888;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--w); }
+
+.nav-cta {
+  background: var(--y);
+  color: var(--k) !important;
+  padding: 0.5rem 1.4rem;
+  font-weight: 800 !important;
+  letter-spacing: 2px;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  transition: background 0.2s !important;
+}
+.nav-cta:hover { background: white !important; color: var(--k) !important; }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(255,214,0,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(255,43,43,0.05) 0%, transparent 60%);
+}
+
+.hero-grid-lines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,214,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,214,0,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--r);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,43,43,0.3);
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 12vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  animation: fadeUp 0.7s 0.35s ease both;
+}
+.hero h1 .line1 { color: var(--w); display: block; }
+.hero h1 .line2 { color: var(--y); display: block; }
+.hero h1 .line3 { color: var(--r); display: block; -webkit-text-stroke: 1px var(--r); -webkit-text-fill-color: transparent; }
+
+.hero-sub {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 1.5rem;
+  animation: fadeUp 0.7s 0.5s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; margin-top: 2.5rem;
+  animation: fadeUp 0.7s 0.65s ease both;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: none;
+  transition: all 0.2s;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+}
+.btn-primary { background: var(--y); color: var(--k); }
+.btn-primary:hover { background: white; transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--w); border: 1px solid #333; clip-path: none; }
+.btn-ghost:hover { border-color: var(--w); transform: translateY(-2px); }
+
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 3rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: #444;
+  letter-spacing: 3px;
+  display: flex; align-items: center; gap: 0.8rem;
+  animation: fadeUp 0.7s 0.9s ease both;
+}
+.hero-scroll::before {
+  content: '';
+  width: 40px; height: 1px;
+  background: #444;
+  display: block;
+}
+
+.hero-deco {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(8rem, 20vw, 22rem);
+  opacity: 0.06;
+  animation: float 4s ease-in-out infinite, fadeUp 1s 0.5s ease both;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.hero-stats {
+  position: absolute; bottom: 2.5rem; right: 3rem;
+  display: flex; gap: 3rem;
+  animation: fadeUp 0.7s 0.8s ease both;
+}
+.stat-item { text-align: right; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: var(--y);
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: #555;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
+@keyframes float { 0%,100% { transform: translateY(-50%) rotate(-3deg); } 50% { transform: translateY(calc(-50% - 20px)) rotate(2deg); } }
+
+/* ─── SECTION HEADERS ─── */
+.section-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 5px;
+  color: var(--y);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+/* ─── PILARES ─── */
+.pilares {
+  padding: 5rem 3rem;
+  position: relative;
+}
+.pilares-header { margin-bottom: 3rem; }
+.pilares-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5px;
+  background: #1f1f1f;
+}
+.pilar-card {
+  background: var(--g);
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+  cursor: none;
+}
+.pilar-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.pilar-card:nth-child(1)::before { background: var(--y); }
+.pilar-card:nth-child(2)::before { background: var(--green); }
+.pilar-card:nth-child(3)::before { background: #CC44FF; }
+.pilar-card:hover { background: #1a1a1a; }
+.pilar-card:hover::before { transform: scaleX(1); }
+
+.pilar-emoji { font-size: 3rem; margin-bottom: 1.5rem; display: block; }
+.pilar-num {
+  position: absolute; top: 2rem; right: 2rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  color: #1a1a1a;
+  line-height: 1;
+}
+.pilar-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.8rem;
+  line-height: 1;
+}
+.pilar-card:nth-child(1) .pilar-name { color: var(--y); }
+.pilar-card:nth-child(2) .pilar-name { color: var(--green); }
+.pilar-card:nth-child(3) .pilar-name { color: #CC44FF; }
+.pilar-desc {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #777;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+}
+
+/* ─── MENÚ ─── */
+.menu {
+  padding: 5rem 3rem;
+  background: var(--g);
+  position: relative;
+  overflow: hidden;
+}
+.menu::before {
+  content: 'MENÚ';
+  position: absolute;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20rem;
+  color: #0f0f0f;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  letter-spacing: 10px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.menu-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 3rem;
+  position: relative; z-index: 1;
+}
+
+.menu-tabs {
+  display: flex; gap: 0.5rem;
+}
+.tab {
+  padding: 0.4rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid #2a2a2a;
+  color: #555;
+  cursor: none;
+  transition: all 0.2s;
+  background: transparent;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.tab.active, .tab:hover { border-color: var(--y); color: var(--y); }
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #1a1a1a;
+  position: relative; z-index: 1;
+}
+
+.menu-item {
+  background: var(--k);
+  padding: 2rem 1.5rem;
+  cursor: none;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.menu-item::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,214,0,0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.menu-item:hover { background: #111; }
+.menu-item:hover::after { opacity: 1; }
+
+.menu-item-emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+.menu-item-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--w);
+  margin-bottom: 0.4rem;
+}
+.menu-item-desc { font-size: 0.8rem; color: #555; line-height: 1.4; margin-bottom: 1rem; font-weight: 400; }
+.menu-item-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  color: var(--y);
+  font-weight: 500;
+}
+.menu-item-badge {
+  position: absolute; top: 1rem; right: 1rem;
+  background: var(--r);
+  color: white;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0.2rem 0.5rem;
+  text-transform: uppercase;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ─── ZONA GAMER ─── */
+.gamer {
+  padding: 5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.gamer-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,255,135,0.04) 0%, transparent 70%);
+}
+.gamer-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+.gamer-content .section-title { color: var(--green); }
+.gamer-content p {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #777;
+  line-height: 1.7;
+  margin: 1.5rem 0 2rem;
+  letter-spacing: 0.5px;
+}
+.gamer-features {
+  display: flex; flex-direction: column; gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.gamer-feature {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.2rem;
+  background: rgba(0,255,135,0.04);
+  border: 1px solid rgba(0,255,135,0.1);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #aaa;
+  transition: all 0.2s;
+  cursor: none;
+}
+.gamer-feature:hover { border-color: rgba(0,255,135,0.3); color: var(--green); }
+.gamer-feature .feat-icon { font-size: 1.2rem; }
+
+.gamer-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  height: 400px;
+}
+.gamer-cell {
+  background: var(--g2);
+  border: 1px solid #222;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+  cursor: none;
+}
+.gamer-cell:hover { background: #252525; border-color: var(--green); }
+.gamer-cell:first-child {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #0d1a12, #0a1215);
+  border-color: rgba(0,255,135,0.15);
+}
+.gamer-cell .console-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--green);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.gamer-cell .console-emoji { font-size: 2.5rem; }
+.gamer-cell:first-child .console-emoji { font-size: 3.5rem; }
+
+/* ─── EVENTOS ─── */
+.eventos {
+  padding: 5rem 3rem;
+  background: var(--g);
+}
+.eventos-inner {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 4rem;
+  align-items: center;
+}
+.eventos-content .section-title { color: var(--w); }
+.eventos-content .section-title span { color: #CC44FF; }
+.eventos-content p {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #777;
+  line-height: 1.7;
+  margin: 1.5rem 0 2rem;
+}
+
+.eventos-cards {
+  display: flex; flex-direction: column; gap: 1px;
+  background: #1a1a1a;
+}
+.evento-card {
+  background: var(--k);
+  padding: 1.8rem 2rem;
+  display: flex; align-items: center; gap: 1.5rem;
+  cursor: none;
+  transition: background 0.2s;
+  border-left: 3px solid transparent;
+}
+.evento-card:hover { background: #0f0f0f; border-left-color: #CC44FF; }
+.evento-icon { font-size: 2rem; flex-shrink: 0; }
+.evento-info {}
+.evento-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.3rem;
+  color: #CC44FF;
+}
+.evento-desc { font-size: 0.85rem; color: #666; font-weight: 400; line-height: 1.4; }
+
+.wa-btn {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 1.2rem 2rem;
+  background: #25D366;
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: none;
+  transition: all 0.2s;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  margin-top: 2rem;
+  width: fit-content;
+}
+.wa-btn:hover { background: #1ebe58; transform: translateY(-2px); }
+
+/* ─── INSTAGRAM ─── */
+.instagram {
+  padding: 5rem 3rem;
+  text-align: center;
+}
+.instagram .section-eyebrow { display: block; }
+.instagram .section-title { margin-bottom: 0.5rem; }
+.ig-handle {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: #555;
+  letter-spacing: 2px;
+  margin-bottom: 3rem;
+  display: block;
+}
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+.ig-post {
+  aspect-ratio: 1;
+  background: var(--g2);
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+}
+.ig-post::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,214,0,0.15);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.ig-post:hover::after { opacity: 1; }
+.ig-post-inner {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #1a1a1a, #222);
+}
+
+/* ─── UBICACIÓN ─── */
+.ubicacion {
+  padding: 5rem 3rem;
+  background: var(--g);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.ubicacion-info {}
+.ubicacion-info p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.7;
+  margin: 1.5rem 0;
+  font-weight: 400;
+}
+.info-row {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid #1a1a1a;
+}
+.info-row:last-child { border: none; }
+.info-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+.info-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--y);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+.info-value {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--w);
+}
+
+.map-placeholder {
+  background: var(--g2);
+  border: 1px solid #222;
+  aspect-ratio: 4/3;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.map-placeholder::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(rgba(255,214,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,214,0,0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.map-pin-big { font-size: 4rem; animation: bounce 1.5s ease-in-out infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.map-address {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: #555;
+  text-align: center;
+  letter-spacing: 2px;
+  line-height: 1.6;
+  position: relative;
+}
+.map-open-btn {
+  background: var(--y);
+  color: var(--k);
+  padding: 0.6rem 1.5rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: none;
+  transition: background 0.2s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  position: relative;
+}
+.map-open-btn:hover { background: white; }
+
+/* ─── FOOTER ─── */
+footer {
+  background: #050505;
+  border-top: 1px solid #111;
+  padding: 3rem;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid #111;
+  margin-bottom: 2rem;
+}
+.footer-brand .logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: var(--y);
+  letter-spacing: 3px;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.footer-brand .logo span { color: var(--r); }
+.footer-brand p { font-size: 0.85rem; color: #444; line-height: 1.6; font-weight: 400; }
+.footer-col-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--y);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 400;
+  transition: color 0.2s;
+  letter-spacing: 0.5px;
+}
+.footer-links a:hover { color: var(--w); }
+
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: #333;
+  letter-spacing: 2px;
+}
+.footer-socials { display: flex; gap: 1rem; }
+.social-link {
+  width: 36px; height: 36px;
+  border: 1px solid #1f1f1f;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: none;
+}
+.social-link:hover { border-color: var(--y); background: rgba(255,214,0,0.05); }
+
+/* ─── WA FLOTANTE ─── */
+.wa-float {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  width: 56px; height: 56px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  z-index: 400;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  cursor: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadeUp 0.7s 1.2s ease both;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(37,211,102,0.6); }
+
+/* ─── SCROLL ANIMATIONS ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 6rem 1.5rem 2rem; }
+  .hero-stats { display: none; }
+  .pilares { padding: 3rem 1.5rem; }
+  .pilares-grid { grid-template-columns: 1fr; }
+  .menu { padding: 3rem 1.5rem; }
+  .menu-grid { grid-template-columns: 1fr 1fr; }
+  .menu-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .gamer { padding: 3rem 1.5rem; }
+  .gamer-inner { grid-template-columns: 1fr; }
+  .eventos { padding: 3rem 1.5rem; }
+  .eventos-inner { grid-template-columns: 1fr; }
+  .instagram { padding: 3rem 1.5rem; }
+  .ig-grid { grid-template-columns: repeat(3, 1fr); }
+  .ubicacion { padding: 3rem 1.5rem; grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  footer { padding: 2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">OH MY<span>DOG</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#gamer">Zona Gamer</a></li>
+    <li><a href="#eventos">Eventos</a></li>
+    <li><a href="#ubicacion">Ubicación</a></li>
+    <li><a href="#eventos" class="nav-cta">Reservar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-tag">🌭 Panchería · Zona Gamer · Eventos — Corrientes</div>
+  <h1>
+    <span class="line1">NOS CONOCÉS</span>
+    <span class="line2">POR LOS</span>
+    <span class="line3">PANCHOS.</span>
+  </h1>
+  <p class="hero-sub">Te quedás por todo lo demás</p>
+  <div class="hero-actions">
+    <a href="#menu" class="btn btn-primary">Ver Menú</a>
+    <a href="#eventos" class="btn btn-ghost">Reservar Evento</a>
+  </div>
+  <div class="hero-deco">🌭</div>
+  <div class="hero-scroll">scroll</div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">23K</div>
+      <div class="stat-label">seguidores IG</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">experiencias</div>
+    </div>
+  </div>
+</section>
+
+<!-- PILARES -->
+<section class="pilares" id="pilares">
+  <div class="pilares-header reveal">
+    <div class="section-eyebrow">Lo que hacemos</div>
+    <div class="section-title">TODO EN UN SOLO LUGAR</div>
+  </div>
+  <div class="pilares-grid">
+    <div class="pilar-card reveal reveal-delay-1">
+      <span class="pilar-num">01</span>
+      <span class="pilar-emoji">🌭</span>
+      <div class="pilar-name">COMIDA</div>
+      <p class="pilar-desc">Los mejores panchos de Corrientes. Combos, variantes, salsas de autor y mucho más en nuestro menú.</p>
+    </div>
+    <div class="pilar-card reveal reveal-delay-2">
+      <span class="pilar-num">02</span>
+      <span class="pilar-emoji">🎮</span>
+      <div class="pilar-name">ZONA GAMER</div>
+      <p class="pilar-desc">Consolas de última generación, PCs gamer y torneos mensuales. Reservá tu sesión y jugá con tus amigos.</p>
+    </div>
+    <div class="pilar-card reveal reveal-delay-3">
+      <span class="pilar-num">03</span>
+      <span class="pilar-emoji">🎉</span>
+      <div class="pilar-name">EVENTOS</div>
+      <p class="pilar-desc">Cumpleaños, juntadas y celebraciones épicas. Te armamos todo para que solo tengas que disfrutar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MENÚ -->
+<section class="menu" id="menu">
+  <div class="menu-header">
+    <div class="reveal">
+      <div class="section-eyebrow">Lo que servimos</div>
+      <div class="section-title">EL MENÚ</div>
+    </div>
+    <div class="menu-tabs reveal">
+      <button class="tab active">Todos</button>
+      <button class="tab">Panchos</button>
+      <button class="tab">Combos</button>
+      <button class="tab">Bebidas</button>
+    </div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-item reveal reveal-delay-1">
+      <div class="menu-item-badge">CLÁSICO</div>
+      <span class="menu-item-emoji">🌭</span>
+      <div class="menu-item-name">El Original</div>
+      <div class="menu-item-desc">Pancho clásico con mostaza, ketchup y mayonesa en pan brioche.</div>
+      <div class="menu-item-price">$XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-2">
+      <div class="menu-item-badge">HOT 🔥</div>
+      <span class="menu-item-emoji">🌶️</span>
+      <div class="menu-item-name">El Picante</div>
+      <div class="menu-item-desc">Para los que la van picante. Jalapeños, salsa criolla y chimichurri.</div>
+      <div class="menu-item-price">$XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-3">
+      <span class="menu-item-emoji">🧀</span>
+      <div class="menu-item-name">El Cheesy</div>
+      <div class="menu-item-desc">Doble cheddar fundido, bacon crocante y cebolla caramelizada.</div>
+      <div class="menu-item-price">$XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-1">
+      <div class="menu-item-badge">COMBO</div>
+      <span class="menu-item-emoji">🍟</span>
+      <div class="menu-item-name">Gamer Combo</div>
+      <div class="menu-item-desc">2 panchos + papas + bebida. El favorito de la zona gamer.</div>
+      <div class="menu-item-price">$XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-2">
+      <span class="menu-item-emoji">🌯</span>
+      <div class="menu-item-name">El Triple</div>
+      <div class="menu-item-desc">El más grande. Tres salchichas, queso, tomate y lechuga fresca.</div>
+      <div class="menu-item-price">$XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-3">
+      <span class="menu-item-emoji">🥤</span>
+      <div class="menu-item-name">Bebidas</div>
+      <div class="menu-item-desc">Gaseosas, jugos naturales, agua saborizada y energizantes.</div>
+      <div class="menu-item-price">Desde $XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-1">
+      <span class="menu-item-emoji">🍦</span>
+      <div class="menu-item-name">Postres</div>
+      <div class="menu-item-desc">Helados, brownies y más opciones dulces para cerrar.</div>
+      <div class="menu-item-price">Desde $XXXX</div>
+    </div>
+    <div class="menu-item reveal reveal-delay-2" style="display:flex;align-items:center;justify-content:center;background:#0a0a0a;text-align:center;flex-direction:column;gap:1rem;">
+      <span style="font-size:2rem;">🌭</span>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#333;letter-spacing:2px;">VER MENÚ<br>COMPLETO</div>
+    </div>
+  </div>
+</section>
+
+<!-- ZONA GAMER -->
+<section class="gamer" id="gamer">
+  <div class="gamer-bg"></div>
+  <div class="gamer-inner">
+    <div class="gamer-content">
+      <div class="reveal">
+        <div class="section-eyebrow">El diferencial</div>
+        <div class="section-title">ZONA<br>GAMER</div>
+      </div>
+      <p class="reveal">El único lugar en Corrientes donde podés comer los mejores panchos mientras jugás con tus amigos en consolas de última generación.</p>
+      <div class="gamer-features reveal">
+        <div class="gamer-feature">
+          <span class="feat-icon">🎮</span> PlayStation 5 & Xbox Series X
+        </div>
+        <div class="gamer-feature">
+          <span class="feat-icon">💻</span> PCs Gamer de alta gama
+        </div>
+        <div class="gamer-feature">
+          <span class="feat-icon">🏆</span> Torneos mensuales con premios
+        </div>
+        <div class="gamer-feature">
+          <span class="feat-icon">⏱️</span> Reservas por hora o jornada completa
+        </div>
+      </div>
+      <a href="#" class="btn btn-primary reveal" style="background:var(--green);clip-path:polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);">Reservar Zona Gamer</a>
+    </div>
+    <div class="gamer-visual reveal">
+      <div class="gamer-cell">
+        <span class="console-emoji">🎮</span>
+        <span class="console-name">ZONA PRINCIPAL</span>
+      </div>
+      <div class="gamer-cell">
+        <span class="console-emoji">🕹️</span>
+        <span class="console-name">PS5</span>
+      </div>
+      <div class="gamer-cell">
+        <span class="console-emoji">💻</span>
+        <span class="console-name">PC GAMER</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTOS -->
+<section class="eventos" id="eventos">
+  <div class="eventos-inner">
+    <div class="eventos-content">
+      <div class="reveal">
+        <div class="section-eyebrow">Celebraciones</div>
+        <div class="section-title">HACÉ TU<br><span>EVENTO</span><br>CON NOSOTROS</div>
+      </div>
+      <p class="reveal">Desde cumpleaños hasta juntadas épicas. Te armamos el evento perfecto: menú especial, zona gamer reservada y decoración incluida.</p>
+      <a href="https://wa.me/543794000000?text=Hola!%20Quiero%20consultar%20sobre%20un%20evento" class="wa-btn reveal">
+        <span>💬</span> Consultar por WhatsApp
+      </a>
+    </div>
+    <div class="eventos-cards reveal">
+      <div class="evento-card">
+        <span class="evento-icon">🎂</span>
+        <div class="evento-info">
+          <div class="evento-name">CUMPLEAÑOS</div>
+          <div class="evento-desc">Decoración temática, menú especial y zona gamer exclusiva para vos y tus invitados.</div>
+        </div>
+      </div>
+      <div class="evento-card">
+        <span class="evento-icon">🕹️</span>
+        <div class="evento-info">
+          <div class="evento-name">JUNTADA GAMER</div>
+          <div class="evento-desc">Reservá la zona completa para tu grupo. Torneos internos, snacks y mucha adrenalina.</div>
+        </div>
+      </div>
+      <div class="evento-card">
+        <span class="evento-icon">🏢</span>
+        <div class="evento-info">
+          <div class="evento-name">EVENTOS CORPORATIVOS</div>
+          <div class="evento-desc">Team building diferente para empresas. Dinámica de juego + catering personalizado.</div>
+        </div>
+      </div>
+      <div class="evento-card">
+        <span class="evento-icon">🎓</span>
+        <div class="evento-info">
+          <div class="evento-name">FIN DE AÑO / EGRESADOS</div>
+          <div class="evento-desc">Cerrá el año con tu curso en el lugar más copado de Corrientes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="instagram">
+  <div class="reveal">
+    <span class="section-eyebrow">Seguinos</span>
+    <div class="section-title">EN INSTAGRAM</div>
+    <span class="ig-handle">@ohmydog.ctes · 23K seguidores</span>
+  </div>
+  <div class="ig-grid reveal">
+    <div class="ig-post"><div class="ig-post-inner">🌭</div></div>
+    <div class="ig-post"><div class="ig-post-inner">🎮</div></div>
+    <div class="ig-post"><div class="ig-post-inner">🔥</div></div>
+    <div class="ig-post"><div class="ig-post-inner">🎉</div></div>
+    <div class="ig-post"><div class="ig-post-inner">🧀</div></div>
+    <div class="ig-post"><div class="ig-post-inner">🏆</div></div>
+  </div>
+</section>
+
+<!-- UBICACIÓN -->
+<section class="ubicacion" id="ubicacion">
+  <div class="ubicacion-info">
+    <div class="reveal">
+      <div class="section-eyebrow">Encontranos</div>
+      <div class="section-title">DÓNDE<br>ESTAMOS</div>
+    </div>
+    <div class="reveal">
+      <div class="info-row">
+        <span class="info-icon">📍</span>
+        <div>
+          <div class="info-label">Dirección</div>
+          <div class="info-value">Catamarca 923, Corrientes</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">🕐</span>
+        <div>
+          <div class="info-label">Horarios</div>
+          <div class="info-value">Lun–Vie: 12:00 – 00:00<br>Sáb–Dom: 12:00 – 02:00</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">📲</span>
+        <div>
+          <div class="info-label">WhatsApp</div>
+          <div class="info-value">+54 379 4XX-XXXX</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">📸</span>
+        <div>
+          <div class="info-label">Instagram</div>
+          <div class="info-value">@ohmydog.ctes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="map-placeholder reveal">
+    <span class="map-pin-big">📍</span>
+    <div class="map-address">CATAMARCA 923<br>CORRIENTES, ARGENTINA</div>
+    <a href="https://maps.google.com" class="map-open-btn">Abrir en Google Maps</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo">OH MY<span>DOG</span></span>
+      <p>Panchería · Zona Gamer · Eventos<br>Catamarca 923, Corrientes, Argentina</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Navegar</div>
+      <ul class="footer-links">
+        <li><a href="#menu">Menú</a></li>
+        <li><a href="#gamer">Zona Gamer</a></li>
+        <li><a href="#eventos">Eventos</a></li>
+        <li><a href="#ubicacion">Ubicación</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Horarios</div>
+      <ul class="footer-links">
+        <li><a href="#">Lunes a Viernes</a></li>
+        <li><a href="#">12:00 – 00:00 hs</a></li>
+        <li><a href="#">Sábados y Domingos</a></li>
+        <li><a href="#">12:00 – 02:00 hs</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Redes</div>
+      <ul class="footer-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 OH MY DOG — CORRIENTES, ARGENTINA</div>
+    <div class="footer-socials">
+      <a href="#" class="social-link">📸</a>
+      <a href="#" class="social-link">💬</a>
+      <a href="#" class="social-link">🎵</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOTANTE -->
+<a href="https://wa.me/543794000000" class="wa-float" title="Escribinos por WhatsApp">💬</a>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .pilar-card, .menu-item, .gamer-cell, .evento-card, .ig-post, .social-link, .wa-float').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// MENU TABS
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
